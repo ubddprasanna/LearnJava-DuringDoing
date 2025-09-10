@@ -63,10 +63,7 @@ Open `SchoolManagementSystem.java` in your text editor and type or paste the fol
 
 ```java
 public class SchoolManagementSystem {
-  public static void main(String[] args) {
-    // The \n character creates a new line in the output
-    System.out.println("Welcome to CyberCrewz Academy\nSchool Management System V1\nCode name: River");
-  }
+ '//Your Code'
 }
 ```
 
