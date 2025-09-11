@@ -1,8 +1,3 @@
-Of course. Here is the complete Step 3 guide, now including a new **Part 3.6** focused on improving the CLI display of the student list.
-
-You can copy the entire content below and save it in a file named `STEP-03_Student_Storage_and_CLI.md`.
-
----
 
 ````markdown
 # Step 3: Storing Student Data 💾
