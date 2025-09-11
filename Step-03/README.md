@@ -1,5 +1,3 @@
-
-````markdown
 # Step 3: Storing Student Data 💾
 
 This is a critical step where our application starts to become useful. We will build the functionality to add and view student data. We'll start with a flawed-but-simple approach to understand its limitations, and then solve those problems using the power of arrays.
