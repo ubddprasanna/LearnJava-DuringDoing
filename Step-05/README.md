@@ -1,10 +1,4 @@
-Of course. Here is the detailed guide for Step 5, broken into progressive sub-parts. This guide focuses on building the core search, update, and delete functionalities, exploring the logic and trade-offs involved, and showing the expected console outputs without any Java code.
 
-You can copy the entire content below and save it in a file named `STEP-05_CRUD_Operations.md`.
-
------
-
-````markdown
 # Step 5: Search, Update, and Delete Functionality 🔍
 
 Our application can now add and list students. In this step, we will build the remaining core features of data management: finding, updating, and removing a specific student from the system. This will involve implementing a fundamental search algorithm and making a key design decision about how to handle data removal.
