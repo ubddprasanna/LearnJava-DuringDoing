@@ -1,10 +1,3 @@
-Of course. Here is the detailed guide for Step 6, broken down into progressive sub-parts. This guide focuses on building the data analysis features, highlighting common pitfalls like integer division and edge cases, and showing only the expected console outputs without any Java code.
-
-You can copy the entire content below and save it in a file named `STEP-06_Data_Analysis.md`.
-
------
-
-````markdown
 # Step 6: Student Marks Analysis 📊
 
 Our system is now a capable data manager, but raw data isn't knowledge. This step is about transforming that data into meaningful insights. We will build a "Student Analysis" module to calculate statistics like the class average, identify top performers, and get an overall sense of class performance.
