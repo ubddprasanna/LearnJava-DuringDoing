@@ -1,155 +1,257 @@
 # Step 9: Tracking Attendance with 2D Arrays 🗓️
 
-Our system can handle static student information, but a school is a dynamic environment. We need to track data over time, and the most fundamental example is attendance. This step introduces a powerful new data structure, the **2D array**, to solve this challenge.
+Our system can handle a student's static information (like their name and a single mark), but a real school is dynamic. We need to track data that changes over time, and the most fundamental example is **daily attendance**.
+
+In this step, we will learn how to model data across two dimensions (students and time) using a powerful new structure: the **2D array**. This will allow us to build a complete attendance tracking module, from marking daily presence to generating analytical reports. We'll also make our code more professional by organizing it into dedicated "manager" units and using constants for configuration.
 
 ---
+### Project Folder Structure at the End of This Step
 
-### Part 9.1: The Limitation of 1D Arrays
-
-**Goal:** First, let's understand why our current tools are not sufficient for this task. A single array can hold a list of items, but it can't represent data in two dimensions (like students *and* days).
-
-**Concept Focus:** **Data Modeling**. How do we represent the relationship between a list of students and a series of dates? A simple list (`String[]`) or parallel lists are not enough.
-
-
-
-**The Problem (A Thought Experiment):**
-We need to track attendance for 3 students over a 5-day school week. How could we do this with our current arrays?
-* `boolean[] day1Attendance`, `boolean[] day2Attendance`... This would be incredibly messy and inflexible. What happens when it's day 6? We'd have to add a new array and recompile the program.
-* This approach is not scalable. We need a single structure that can hold all this information.
-
----
-
-### Part 9.2: Visualizing the 2D Array (The Grid)
-
-**Goal:** Introduce the solution: a **2D array**. Conceptually, it's not a list, but a **grid** or a **table** with rows and columns. This is a perfect fit for our problem.
-
-**Concept Focus:** **2D Array Structure**.
-* **Rows:** Each row will represent a single student.
-* **Columns:** Each column will represent a single day of the term.
-* **Cell:** The value at `[row][column]` (e.g., `attendance[studentIndex][dayIndex]`) will be `true` (Present) or `false` (Absent).
-
-**The Conceptual Model:**
+We are expanding our architecture. We're adding a central `Config.java` to hold all our application-wide settings and a new `AttendanceManager.java` to contain all logic related to attendance.
 
 ```
-          | Day 1 | Day 2 | Day 3 | Day 4 | Day 5 |
------------------------------------------------------
-Student 1 | true  | true  | false | true  | true  |  <- Row 0
-Student 2 | true  | true  | true  | true  | true  |  <- Row 1
-Student 3 | false | false | true  | true  | false |  <- Row 2
+SchoolManagementSystem/
+├── .gitignore
+├── README.md
+├── SchoolManagementSystem.java
+└── utils/
+    ├── AttendanceManager.java
+    ├── Config.java
+    ├── GradeCalc.java
+    └── StudentIO.java
 ```
-
-**The Problem:** We have the blueprint. Now, we need to build the user interface to interact with this new data structure.
 
 ---
 
-### Part 9.3: The Attendance Management Menu
+### Part 9.1: The New Challenge - Storing Data in a Grid
 
-**Goal:** Let's create a new sub-menu in our application dedicated to managing attendance.
+**Task:** Before writing code, we must design our data structure. We need a way to hold attendance for every student, for every day of the term. A simple 1D array is just a list—it's not up to the task. We need a grid.
 
-**Concept Focus:** UI/UX; creating a clear entry point for our new features.
+**The Problem It Solves:** This lays the foundation for the entire attendance module. Without the right data structure, the logic for marking and retrieving attendance would be incredibly complex and inefficient (imagine having to create a new array for every single day!).
 
-#### Expected Output
+**Reasoning & Engineer Thinking:**
+The best data structure is one that naturally maps to the real-world problem. Attendance is a grid: you have a list of students (rows) and a list of days (columns). A **2D array** is a perfect digital representation of this grid. We will decide on a convention: `attendance[studentIndex][dayIndex]`. This clarity is crucial before writing any code. We'll also define configuration constants (`MAX_STUDENTS`, `DAYS_PER_TERM`) in a central place. Storing such values centrally means if the school term changes from 30 days to 40, we only need to make the change in one place.
+
+
+
+**Hints:**
+* Think of a 2D array like a spreadsheet. Each student gets their own row, and each day of the term gets its own column. The cell where they intersect holds the attendance status (`true` for Present, `false` for Absent).
+* We'll create a new, dedicated file for all attendance-related logic (e.g., `AttendanceManager.java`). This continues our work from Step 8 of keeping our code organized and giving each unit a single responsibility.
+
+**Expected Outcome:**
+This is a planning and design step. There is no new console output. The outcome is your understanding of this conceptual model:
+
+```
+          | Day 0 | Day 1 | Day 2 | Day 3 | ... (up to DAYS_PER_TERM - 1)
+-------------------------------------------------------------------------
+Student 0 | false | false | false | false | ...
+Student 1 | false | false | false | false | ...
+Student 2 | false | false | false | false | ...
+... (up to MAX_STUDENTS - 1)
+```
+
+**Verification:**
+Can you draw this grid on paper? Can you explain what `attendance[5][10] = true;` would represent? (Answer: The student at index 5 was present on day 10).
+
+---
+
+### Part 9.2: The Attendance Management Menu
+
+**Task:** As with our other modules, the first user-facing step is to create a clean and intuitive menu.
+
+**The Problem It Solves:** This provides the user with a clear entry point to access all the new attendance features we are about to build.
+
+**Reasoning & Engineer Thinking:**
+A good user interface (UI) organizes features logically. All attendance-related actions should be grouped together, making the application easy to navigate.
+
+**Hints:**
+* You will add a new option to your main menu loop.
+* This option will lead to a new sub-menu, similar in structure to your `Student Management` menu.
+
+**Expected Outcome:**
+The user can now navigate from the main menu into the new, (currently empty) attendance module.
 
 ```console
 --- Main Menu ---
 1. Student Management
-2. Attendance Management  <-- New Option
-...
+2. Lab Management
+3. Attendance Management  <-- New Option
 0. Exit
-Enter your choice: 2
+Enter your choice: 3
 
 --- Attendance Management ---
-1. Mark Attendance for a Day
+1. Mark Daily Attendance
 2. View Full Attendance Grid
-3. Check a Student's Attendance Percentage
+3. Get Student Attendance Report
+4. List Absentees for a Day
 0. Back to Main Menu
 Enter your choice:
 ```
 
-**The Problem:** The menu is in place, but the core functionality—marking a student as present or absent—is not yet implemented.
+**Verification:**
+Run your program and confirm that you can enter `3` to see the `Attendance Management` menu and then enter `0` to return to the `Main Menu`.
 
 ---
 
-### Part 9.4: Marking Attendance
+### Part 9.3: Marking Daily Attendance (The "Write" Operation)
 
-**Goal:** Implement the "Mark Attendance" feature. The user will specify a day and then go through the list of students to mark them as Present (`P`) or Absent (`A`).
+**Task:** Implement the core feature: marking attendance for a specific day. The program will ask for a day and then loop through each student, asking the teacher to mark them as Present (`P`) or Absent (`A`).
 
-**Concept Focus:** **Nested Loops** and **2D Array Access**. The logic is: "For a given day (column), loop through each student (row) and update the value in that cell (`attendance[studentIndex][dayIndex]`)."
+**The Problem It Solves:** This is the fundamental "write" operation. It allows us to populate our 2D array with real data.
 
-#### Expected Output
+**Reasoning & Engineer Thinking:**
+The logic requires targeting a specific cell in our grid. For a given `dayIndex`, we need to loop through every `studentIndex` and update the value at `attendance[studentIndex][dayIndex]`. We must be careful with user input: a teacher will think in terms of "Day 1", but our array uses "index 0". Our code must handle this translation. We will reuse our `SafeInputReader` from Step 8 to ensure the day is a valid number.
 
-The user experience is a simple, guided process for a specific day.
+**Hints:**
+* First, ask the user for the day (e.g., 1 to 30). Remember to convert this to a 0-based index before using it with the array.
+* Then, loop through your students. For each student, display their name and prompt the user to enter 'P' or 'A'.
+* Update the `boolean[][]` array accordingly (`true` for 'P', `false` for 'A').
+
+**Expected Outcome:**
+A clear, interactive process for the teacher to enter the day's attendance records.
 
 ```console
 --- Attendance Management ---
 Enter your choice: 1
 
-Enter the day to mark attendance for (e.g., 1-5): 3
+Enter the day to mark attendance for (1-30): 2
 
---- Marking Attendance for Day 3 ---
+--- Marking Attendance for Day 2 ---
 Student: John Doe (ID: 101). Present or Absent? (P/A): p
-Student: Jane Smith (ID: 102). Present or Absent? (P/A): p
-Student: Peter Jones (ID: 103). Present or Absent? (P/A): a
+Student: Jane Smith (ID: 102). Present or Absent? (P/A): a
+Student: Peter Jones (ID: 103). Present or Absent? (P/A): p
 
-Attendance for Day 3 has been recorded.
+Attendance for Day 2 has been recorded.
 ```
 
-**The Problem:** We've stored the data, but how can we be sure it's correct? We need a way to view the entire attendance grid.
+**Verification:**
+At this point, you can't visually verify the data yet. The true verification will come in the next part when we build the "viewer."
 
 ---
 
-### Part 9.5: Displaying the Full Attendance Grid
+### Part 9.4: Viewing the Full Grid (The "Read" Operation)
 
-**Goal:** Implement the "View Full Attendance Grid" feature. This will display our conceptual model as a clean, readable table in the console.
+**Task:** Let's give ourselves a way to see the data. Implement the "View Full Attendance Grid" feature to display the entire 2D array in a formatted table.
 
-**Concept Focus:** **Nested Loops for Traversal**. To print a grid, you need an outer loop for the rows (students) and an inner loop for the columns (days).
+**The Problem It Solves:** This provides essential feedback. It allows the user (and you, the developer) to verify that the data entered in the previous step was stored correctly.
 
-#### Expected Output
+**Reasoning & Engineer Thinking:**
+Displaying a grid requires **nested loops**. The outer loop will iterate through the students (rows), and the inner loop will iterate through the days (columns). For each cell, we'll print a `P`, `A`, or a `-` if attendance hasn't been marked yet. We can reuse our `StudentPrinter` ideas from Step 8 to format this nicely.
 
-After marking attendance for a few days, the full grid provides a complete overview of the class's attendance record.
+**Hints:**
+* The outer loop runs from `studentIndex = 0` to `studentCount - 1`.
+* The inner loop runs from `dayIndex = 0` to `DAYS_PER_TERM - 1`.
+* Inside the inner loop, you'll check the value of `attendance[studentIndex][dayIndex]` and print the appropriate character.
+
+**Expected Outcome:**
+A clean, bird's-eye view of the entire term's attendance record.
 
 ```console
---- Attendance Management ---
-Enter your choice: 2
-
 --- Full Attendance Grid (Term 1) ---
-+----------------------+-------+-------+-------+-------+-------+
-| Name                 | Day 1 | Day 2 | Day 3 | Day 4 | Day 5 |
-+----------------------+-------+-------+-------+-------+-------+
-| John Doe             |   P   |   P   |   P   |   -   |   -   |
-| Jane Smith           |   P   |   A   |   P   |   -   |   -   |
-| Peter Jones          |   A   |   A   |   A   |   -   |   -   |
-+----------------------+-------+-------+-------+-------+-------+
++----------------------+-------+-------+-------+ ... +--------+
+| Name                 | Day 1 | Day 2 | Day 3 | ... | Day 30 |
++----------------------+-------+-------+-------+ ... +--------+
+| John Doe             |   P   |   P   |   -   | ... |   -    |
+| Jane Smith           |   P   |   A   |   -   | ... |   -    |
+| Peter Jones          |   A   |   P   |   -   | ... |   -    |
++----------------------+-------+-------+-------+ ... +--------+
 (P = Present, A = Absent, - = Not Yet Marked)
 ```
 
-**The Problem:** The grid is great for a high-level view, but it's not a quick statistic. We need to be able to calculate an individual student's attendance percentage.
+**Verification:**
+Does the grid accurately reflect the data you entered in Part 9.3? For Day 2, does it show P, A, P for the three students? If so, your "write" and "read" logic is working perfectly.
 
 ---
 
-### Part 9.6: Calculating Attendance Percentage
+### Part 9.5: Individual Analysis (Row Traversal)
 
-**Goal:** Implement the feature to check a single student's attendance record and calculate their percentage.
+**Task:** The full grid is useful, but often a teacher needs a specific statistic, like "What is Jane Smith's attendance percentage?" Implement the "Get Student Attendance Report" feature.
 
-**Concept Focus:** **Iterating a Single Row**. To calculate this, we don't need nested loops. We just need to find the student's row and then loop through the columns for that row only, counting the number of `P`'s.
+**The Problem It Solves:** This transforms raw data (`true`/`false` values) into a meaningful, calculated insight (a percentage).
 
-#### Expected Output
+**Reasoning & Engineer Thinking:**
+This introduces a new way to traverse our 2D array: iterating across a **single row**. The logic is:
+1.  Get the `studentIndex` for the requested student.
+2.  Loop from `dayIndex = 0` to `DAYS_PER_TERM - 1`.
+3.  Inside the loop, inspect only `attendance[studentIndex][dayIndex]`.
+4.  Count the number of `true` values.
+5.  Calculate the percentage.
+Remember to handle the "divide by zero" edge case if no attendance has been marked for that student yet!
 
-The system provides a clear, concise report for a single student.
+**Hints:**
+* You'll need a helper to find a student's array index based on their ID. You should have already built logic for this in Step 5 (Search) that you can adapt.
+* Remember to use floating-point division (like in Step 6) to get an accurate percentage.
+
+**Expected Outcome:**
+A concise and informative report for a single student.
 
 ```console
 --- Attendance Management ---
 Enter your choice: 3
 
-Enter the Student ID to check: 103
+Enter the Student ID to check: 102
+Searching for Jane Smith...
 
---- Attendance Report for Peter Jones ---
-Days Marked: 3
-Days Present: 0
-Days Absent: 3
-Attendance Percentage: 0.0%
-
-WARNING: Attendance is critically low!
+--- Attendance Report for Jane Smith ---
+Days Marked So Far: 2
+Days Present: 1
+Days Absent: 1
+Attendance Percentage: 50.0%
 ```
 
-**Success!** We have successfully modeled and managed time-based data using a 2D array. We can record, view, and analyze attendance records, and even add conditional warnings based on the results. We have moved from simple lists to more complex, grid-like data structures.
+**Verification:**
+Look at the full grid for Jane Smith. Manually count her 'P's and the total days marked. Does your manual calculation match the program's output?
+
+---
+
+### Part 9.6: Daily Analysis (Column Traversal)
+
+**Task:** Now let's answer a different question: "Who was absent *today*?" Implement the "List Absentees for a Day" feature.
+
+**The Problem It Solves:** This provides a practical, daily-use tool for teachers. It demonstrates the flexibility of our data structure to answer different kinds of questions.
+
+**Reasoning & Engineer Thinking:**
+This introduces the opposite traversal pattern: iterating down a **single column**. The logic is:
+1.  Get the `dayIndex` from the user.
+2.  Loop from `studentIndex = 0` to `studentCount - 1`.
+3.  Inside the loop, inspect only `attendance[studentIndex][dayIndex]`.
+4.  If the value is `false`, add that student's name to a list of absentees.
+5.  Display the final list.
+
+**Hints:**
+* Again, be careful to convert the user's "Day" (e.g., 2) to a "day index" (e.g., 1).
+* If no one was absent, make sure to print a clear message like "All students were present."
+
+**Expected Outcome:**
+A simple, actionable list for the teacher.
+
+```console
+--- Attendance Management ---
+Enter your choice: 4
+
+Enter the day to check for absentees (1-30): 2
+
+--- Absentees on Day 2 ---
+- Jane Smith (ID: 102)
+
+End of list.
+```
+
+**Verification:**
+Look at the full grid view for Day 2. Does the list of absentees generated by the program match what you see in the grid? Test it for Day 1 as well, where Peter Jones should be listed.
+
+---
+
+## Step 9 Reflection
+
+**What You Learned:**
+* You learned how to model two-dimensional data (like students over time) using a **2D array**.
+* You mastered the core operations on a 2D array: writing to a specific cell (`[row][col]`), and reading from it.
+* You learned three fundamental traversal patterns: iterating over the **entire grid** (nested loops), iterating over a **single row**, and iterating down a **single column**.
+* You reinforced the importance of organizing code into dedicated "manager" units and using central configuration constants.
+
+**Improvement to the System:**
+Our application has taken a huge leap forward. It is no longer limited to storing static, one-dimensional data. It can now track and analyze information that evolves over time, making it much closer to a real-world information system.
+
+**How This Helps in the Next Step:**
+The ability to model 2D space is not limited to time. In the next step, we will use the exact same 2D array concept to model a *physical* space: a computer lab seating chart. The skills you just built—traversing, searching, and updating a grid—will be directly applicable.
