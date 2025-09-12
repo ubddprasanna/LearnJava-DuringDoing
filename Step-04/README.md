@@ -1,10 +1,3 @@
-Of course. Here is the detailed guide for Step 4, broken down into progressive sub-parts. This guide focuses on identifying common input problems and presenting their solutions through expected console outputs, all without showing any Java code.
-
-You can copy the entire content below and save it in a file named `STEP-04_Input_Validation.md`.
-
----
-
-````markdown
 # Step 4: Building a Robust Input Helper 🛡️
 
 Our program works, but it's brittle. It trusts the user to enter perfect input every time. This step is about removing that trust and implementing "defensive programming." We will teach our application to handle incorrect input gracefully instead of crashing.
