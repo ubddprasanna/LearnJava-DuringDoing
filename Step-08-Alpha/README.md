@@ -6,7 +6,7 @@ This guide will walk you through creating your first package and your first "uti
 
 ---
 
-### Part 7α.1: The Problem - The "Everything Drawer"
+### Part 8α.1: The Problem - The "Everything Drawer"
 
 **Task:** Understand why a single file is a major roadblock to building a large, professional application.
 
@@ -23,7 +23,7 @@ Scroll through your `SchoolManagementSystem.java` file. Notice how much unrelate
 
 ---
 
-### Part 7α.2: The Solution - Creating a "Department" (Package)
+### Part 8α.2: The Solution - Creating a "Department" (Package)
 
 **Task:** Create a physical folder to house our utility tools. This folder is known as a **package**.
 
@@ -57,7 +57,7 @@ Use the `ls` (on Mac/Linux) or `dir` (on Windows) command in your terminal to co
 
 ---
 
-### Part 7α.3: Your First Specialist - The `Greeter.java` File
+### Part 8α.3: Your First Specialist - The `Greeter.java` File
 
 **Task:** Create a new, simple `.java` file inside the `utils` package. We'll call it `Greeter.java`, and its only job is to provide a greeting.
 
@@ -80,7 +80,7 @@ Confirm the file exists in the correct location and contains the described struc
 
 ---
 
-### Part 7α.4: The Two Golden Rules of Sharing Code
+### Part 8α.4: The Two Golden Rules of Sharing Code
 
 **Task:** To make the `Greeter` tool usable by our main program, we must follow two non-negotiable rules.
 
@@ -102,7 +102,7 @@ Open `utils/Greeter.java`. Is `package utils;` the very first line? Is the class
 
 ---
 
-### Part 7α.5: "Importing" the Tool
+### Part 8α.5: "Importing" the Tool
 
 **Task:** Now, we need to tell our main `SchoolManagementSystem.java` file that it intends to use a tool from the `utils` department. We do this with an `import` statement.
 
@@ -119,7 +119,7 @@ Check your main file. Does it have the `import utils.Greeter;` line near the top
 
 ---
 
-### Part 7α.6: Compiling a Multi-File Project
+### Part 8α.6: Compiling a Multi-File Project
 
 **Task:** Compile the entire project, telling the Java compiler about all the pieces.
 
@@ -148,7 +148,7 @@ Use `ls` or `dir` to see `SchoolManagementSystem.class`. Then use `ls utils` or 
 
 ---
 
-### Part 7α.7: The Final Test - Running the Program
+### Part 8α.7: The Final Test - Running the Program
 
 **Task:** Run the program and see your two separate files working together.
 
@@ -180,6 +180,6 @@ If you see the "Hello from the Utils Department!" message, you have successfully
 
 ---
 
-### Part 7α.8: The Bridge to the Real Step 8
+### Part 8α.8: The Bridge to the Real Step 8
 
 You have now learned every concept necessary to tackle the main Step 8. The process of creating `utils/StudentIO.java`, `utils/SafeInputReader.java`, and `utils/GradeCalc.java` is **exactly the same** as the simple `Greeter.java` example you just completed. You now have the skills to build a truly modular and professional application.
