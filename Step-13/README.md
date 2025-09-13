@@ -27,6 +27,7 @@ SchoolManagementSystem/
     ├── GradeCalc.java
     ├── LabManager.java
     ├── LibraryManager.java
+    ├── SafeInputReader.java
     └── StudentIO.java
 ```
 

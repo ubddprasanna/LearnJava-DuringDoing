@@ -18,6 +18,7 @@ SchoolManagementSystem/
     ├── AttendanceManager.java
     ├── Config.java
     ├── GradeCalc.java
+    ├── SafeInputReader.java
     └── StudentIO.java
 ```
 
