@@ -1,4 +1,4 @@
-# Step 7 Alpha: A Guide to Building with Code "Departments" (Packages)
+# Step 8 Alpha: A Guide to Building with Code "Departments" (Packages)
 
 Before we can organize our growing school management system, we need to learn how to be an architect. Our main `SchoolManagementSystem.java` file is becoming like a single, giant, chaotic room where every task happens. It's time to build separate "departments" (in Java, these are called **packages**) to house our specialized tools.
 
@@ -33,19 +33,22 @@ Scroll through your `SchoolManagementSystem.java` file. Notice how much unrelate
 We are physically separating our code based on its role. The name `utils` is a standard convention for "utilities"—a collection of helpful, reusable tools that can be used by any part of the application. All package names in Java should be lowercase.
 
 **Hints:**
-* In your terminal, make sure you are in your main `SchoolManagementSystem` project folder.
-* Use the `mkdir utils` command to create the new directory.
+
+- In your terminal, make sure you are in your main `SchoolManagementSystem` project folder.
+- Use the `mkdir utils` command to create the new directory.
 
 **Expected Outcome:**
 Your project's folder structure is now physically organized.
 
 **Before:**
+
 ```
 SchoolManagementSystem/
 └── SchoolManagementSystem.java
 ```
 
 **After:**
+
 ```
 SchoolManagementSystem/
 ├── SchoolManagementSystem.java
@@ -67,10 +70,11 @@ Use the `ls` (on Mac/Linux) or `dir` (on Windows) command in your terminal to co
 Inside this file, you need a blueprint for your tool. Since the file is named `Greeter.java`, the main structure inside it must be `public class Greeter { ... }`. Inside this structure, we'll place our specialist tool, a helper named `sayHello`.
 
 **Hints:**
-* Create a new file with the exact path: `utils/Greeter.java`.
-* Inside this file, you will define the structure `public class Greeter { ... }`.
-* Inside the curly braces, you will define a single tool: `public static void sayHello()`.
-* The logic inside `sayHello` is simple: just print a message like `"Hello from the Utils Department!"`.
+
+- Create a new file with the exact path: `utils/Greeter.java`.
+- Inside this file, you will define the structure `public class Greeter { ... }`.
+- Inside the curly braces, you will define a single tool: `public static void sayHello()`.
+- The logic inside `sayHello` is simple: just print a message like `"Hello from the Utils Department!"`.
 
 **Expected Outcome:**
 A new file now exists at `SchoolManagementSystem/utils/Greeter.java`.
@@ -88,9 +92,9 @@ Confirm the file exists in the correct location and contains the described struc
 
 **Reasoning & Engineer Thinking:**
 
-* **Rule 1: The `package` Declaration (The Address Label):** The very first line of `utils/Greeter.java` *must* declare its address. It must be `package utils;`. This tells the Java compiler, "My home address is the `utils` package." The package name in the code **must** match the folder name on your computer.
+- **Rule 1: The `package` Declaration (The Address Label):** The very first line of `utils/Greeter.java` _must_ declare its address. It must be `package utils;`. This tells the Java compiler, "My home address is the `utils` package." The package name in the code **must** match the folder name on your computer.
 
-* **Rule 2: The `public` Keyword (The "Open for Business" Sign):** The `Greeter` structure and its `sayHello` tool must both be marked `public`. The `public` keyword makes them visible and accessible to code outside of their own file. Without `public`, the tool is considered private and cannot be used by `SchoolManagementSystem.java`.
+- **Rule 2: The `public` Keyword (The "Open for Business" Sign):** The `Greeter` structure and its `sayHello` tool must both be marked `public`. The `public` keyword makes them visible and accessible to code outside of their own file. Without `public`, the tool is considered private and cannot be used by `SchoolManagementSystem.java`.
 
 **Pitfall:** A common mistake is forgetting `public` on the tool (the method). The code might compile, but when you try to call `Greeter.sayHello()`, you'll get an error saying the tool is not visible.
 
@@ -131,8 +135,9 @@ The compiler needs to see the entire project from a "top-down" perspective to un
 **Pitfall:** **DO NOT** `cd` into the `utils` folder to compile. The compiler won't understand what `package utils;` means because it won't see a `utils` folder from that location.
 
 **Hints:**
-* Make sure your terminal is in the root `SchoolManagementSystem/` directory.
-* The command tells `javac` to compile all `.java` files in the current directory (`*.java`) and all `.java` files inside the `utils` directory (`utils/*.java`). An engineer might use this wildcard approach to compile everything that has changed.
+
+- Make sure your terminal is in the root `SchoolManagementSystem/` directory.
+- The command tells `javac` to compile all `.java` files in the current directory (`*.java`) and all `.java` files inside the `utils` directory (`utils/*.java`). An engineer might use this wildcard approach to compile everything that has changed.
 
 **Expected Outcome:**
 You run the compile command from the project root and it completes without any errors.
@@ -141,6 +146,7 @@ You run the compile command from the project root and it completes without any e
 C:\Projects\SchoolManagementSystem> javac *.java utils/*.java
 C:\Projects\SchoolManagementSystem>
 ```
+
 You will now see new `.class` files in both the root directory and the `utils` directory.
 
 **Verification:**
@@ -158,8 +164,9 @@ Use `ls` or `dir` to see `SchoolManagementSystem.class`. Then use `ls utils` or 
 The `java` command hasn't changed because the `main` method (the program's entry point) is still in `SchoolManagementSystem.java`, which is not in a package. You run the program by calling the file that contains the main entry point.
 
 **Hints:**
-* Make sure you have added the line `Greeter.sayHello();` somewhere inside the `main` method of `SchoolManagementSystem.java`.
-* Run the command from the root directory.
+
+- Make sure you have added the line `Greeter.sayHello();` somewhere inside the `main` method of `SchoolManagementSystem.java`.
+- Run the command from the root directory.
 
 **Expected Outcome:**
 The program runs and you see the message from your `Greeter` tool, confirming a successful cross-package call.
