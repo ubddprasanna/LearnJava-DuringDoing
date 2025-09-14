@@ -124,7 +124,6 @@ Confirm that your program no longer crashes when you enter text instead of a num
 
 ### A New Challenge & The Power of Recursion
 
-What is Recursion? Recursion is a way of solving a problem by having a function call itself to solve a smaller piece of the same problem. It's like a set of Russian nesting dolls. To open the whole set, you open the first doll, and inside you find a smaller, identical doll that you open in the exact same way.
 ---
 ### Part 8.4: Configuring the Grading Scheme (The "Better Way")
 
@@ -209,6 +208,8 @@ After entering the scores, search for John Doe again. Perhaps create a new "View
 
 **Reasoning & Engineer Thinking:**
 This demonstrates a complete and robust feature. The system retrieves two different pieces of data (the general school-wide configuration and the specific student's data) and combines them using a specialized calculation engine (`GradeCalc`). This is a perfect example of how different, well-organized components of a program collaborate.
+
+***What is Recursion? Recursion is a way of solving a problem by having a function call itself to solve a smaller piece of the same problem. It's like a set of Russian nesting dolls. To open the whole set, you open the first doll, and inside you find a smaller, identical doll that you open in the exact same way.***
 
 **Hints:**
 * When the user selects this option, your program will need to:
