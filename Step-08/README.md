@@ -122,44 +122,113 @@ Confirm that your program no longer crashes when you enter text instead of a num
 
 ---
 
-### Part 8.4: A New Challenge & The Power of Recursion
+### A New Challenge & The Power of Recursion
+---
+### Part 8.4: Configuring the Grading Scheme (The "Better Way")
 
-**Task:** A single "Marks" field is too simple for a real school. A student's final grade is often a **weighted average** of multiple assignments. We need to build a calculator for this. We will solve this problem using **recursion**.
+**Task:** Before we can enter detailed marks, an administrator or teacher must define *how* the final grade is calculated. We will create a new "Grading Settings" area where the user can define the components of the grade (e.g., Final Exam, Midterm) and their respective weights.
 
-**What is Recursion?**
-Recursion is a way of solving a problem by having a function call itself to solve a smaller piece of the same problem. It's like a set of Russian nesting dolls. To open the whole set, you open the first doll, and inside you find a smaller, identical doll that you open in the exact same way.
+**The Problem It Solves:** This completely eliminates the need for the user to remember and re-enter the grading weights every time. It ensures that every student is graded using the exact same, consistent formula. This is a huge improvement in usability and reliability.
 
-**The Problem:** Calculate the total weighted score for a list of assignments: `[Final Exam (Weight: 60%, Score: 90), Midterm (30%, 80), Homework (10%, 100)]`.
-
-**The Recursive Logic:**
-* **The Big Problem:** Calculate the grade for all 3 assignments.
-* **The Recursive Step:** The solution is the grade for the **first assignment** (`Final Exam`) PLUS the solution to the **smaller, remaining problem** (`[Midterm, Homework]`). The function then calls itself to solve this smaller problem.
-* **The Base Case:** Eventually, the function will be asked to solve the problem for an empty list of assignments. The answer for an empty list is simply `0`. This is the "smallest doll" that doesn't contain another one, and it stops the process.
+**Reasoning & Engineer Thinking:**
+This is a classic example of **separating configuration from data entry**. The "grading scheme" is a piece of configuration that applies to the whole class or subject. It should be set once. The individual "scores" are the data that is unique to each student. Good software never makes a user enter the same configuration data over and over. A key part of this is also **validation**: the system should check that the weights entered by the user add up to 100% to prevent logical errors in calculation.
 
 **Hints:**
-* To make the recursion visible and truly understand it, add print statements inside your function. Show what list it's working on, what calculation it's performing, and what result it's returning. This trace is an invaluable learning tool.
-
-
+* Add a new option to the main menu or a settings sub-menu, like "5. Grading Scheme Configuration".
+* When selected, the system will prompt the user to define the assignments and their weights.
+* The system must validate that the sum of all weights equals 1.0 (or 100%). If it doesn't, it should show an error and ask the user to try again.
 
 **Expected Outcome:**
-The user searches for a student and opts to calculate their weighted grade. The program then prints a "trace" of its recursive thinking process, showing how it breaks the problem down and builds the solution back up.
+A one-time setup process for the grading policy.
+
+```console
+--- Main Menu ---
+...
+5. Grading Scheme Configuration
+...
+Enter your choice: 5
+
+--- Grading Scheme Setup ---
+You will define the components of the final grade.
+All weights must sum to 1.0 (e.g., 0.6 for 60%).
+
+Enter weight for 'Final Exam': 0.6
+Enter weight for 'Midterm': 0.3
+Enter weight for 'Homework': 0.1
+
+Checking weights... 0.6 + 0.3 + 0.1 = 1.0.
+Success! Grading scheme has been configured for this session.
+```
+
+**Verification:**
+Test the validation. Try entering weights that don't add up to 1.0 (e.g., 0.5, 0.3, 0.1). The system should display an error message and force you to re-enter them until they are correct.
+
+---
+
+### Part 8.5: Enhanced Marks Entry
+
+**Task:** Now, we must upgrade our "Update Marks" feature. Instead of asking for a single, generic mark, it must now prompt the user to enter a score for each specific assignment component that was defined in our new Grading Scheme.
+
+**The Problem It Solves:** This allows our system to capture a detailed and accurate breakdown of a student's performance, which is essential for calculating a weighted grade.
+
+**Reasoning & Engineer Thinking:**
+The user interface for this feature should be **data-driven**. It reads the configured assignment names (`Final Exam`, `Midterm`, etc.) and dynamically generates the prompts for the user. This makes our system incredibly flexible. If the administrator later changes the scheme to include "Project Work," this marks entry screen will automatically update to ask for a project score without requiring any code changes.
+
+**Hints:**
+* This will require a change to your `StudentRecord` data bundle. Instead of a simple `int[] marks`, you might now need a more structured way to hold these scores, perhaps parallel arrays *within* the record for now: `String[] assignmentNames`, `double[] assignmentScores`.
+* Your "Update Marks" logic will first look at the saved grading scheme, then loop through the assignment names, prompting the user for a score for each one.
+
+**Expected Outcome:**
+A dynamic and detailed data entry process for a specific student.
 
 ```console
 --- Student Management ---
-Enter the Student ID to search for: 101
-...
-Calculate weighted final grade for John Doe? (yes/no): yes
+Enter choice to update marks for student STU101 (John Doe)...
 
-Assignments:
-- Final Exam (Weight: 0.6, Score: 90)
-- Midterm    (Weight: 0.3, Score: 80)
-- Homework   (Weight: 0.1, Score: 100)
+--- Entering Marks for John Doe ---
+Using the configured grading scheme.
+Enter score for Final Exam (0-100): 90
+Enter score for Midterm (0-100): 80
+Enter score for Homework (0-100): 100
 
---- Calculating Final Grade (Recursive Trace) ---
+All scores have been recorded for John Doe.
+```
+
+**Verification:**
+After entering the scores, search for John Doe again. Perhaps create a new "View Detailed Marks" option. Verify that the system has correctly saved the scores `90`, `80`, and `100` for him.
+
+---
+
+### Part 8.6: Calculating the Final Grade (Putting It All Together)
+
+**Task:** Finally, the payoff. Create a feature, "View Final Weighted Grade," that brings everything together. It will use the **configured weights** from Part 8.4 and the **student's scores** from Part 8.5, and feed them into our `GradeCalc` recursive tool to produce the final, accurate grade.
+
+**The Problem It Solves:** This completes the entire workflow, connecting configuration, data entry, and calculation to deliver the valuable final result to the user.
+
+**Reasoning & Engineer Thinking:**
+This demonstrates a complete and robust feature. The system retrieves two different pieces of data (the general school-wide configuration and the specific student's data) and combines them using a specialized calculation engine (`GradeCalc`). This is a perfect example of how different, well-organized components of a program collaborate.
+
+**Hints:**
+* When the user selects this option, your program will need to:
+    1.  Find the `StudentRecord` for the student in question.
+    2.  Access the array of scores from that record.
+    3.  Access the array of weights from your saved configuration.
+    4.  Pass both arrays to your `GradeCalc.weightedGrade` wrapper function.
+
+**Expected Outcome:**
+The recursive trace we designed earlier now appears, but this time it's using the dynamic data we just configured and entered, making it much more meaningful.
+
+```console
+--- Student Management ---
+Enter choice to view final grade for student STU101 (John Doe)...
+
+--- Calculating Final Grade for John Doe ---
+Weights: {Final Exam=0.6, Midterm=0.3, Homework=0.1}
+Scores:  {Final Exam=90.0, Midterm=80.0, Homework=100.0}
+
 [TRACE] Calculating for first 3 items...
   [TRACE]  Calculating for first 2 items...
     [TRACE]   Calculating for first 1 items...
-      [TRACE]    Calculating for first 0 items...
       [TRACE]    -> Base Case! Returning 0.0
     [TRACE]   -> Processing item 1 (Homework): 0.1 * 100.0 = 10.0. Result is 0.0 + 10.0 = 10.0
   [TRACE]  -> Processing item 2 (Midterm): 0.3 * 80.0 = 24.0. Result is 10.0 + 24.0 = 34.0
@@ -170,46 +239,7 @@ Final Weighted Grade for John Doe: 88.0
 ```
 
 **Verification:**
-Manually calculate the weighted grade: `(0.6 * 90) + (0.3 * 80) + (0.1 * 100) = 54 + 24 + 10 = 88.0`. Confirm that the program's final output matches your manual calculation.
-
----
-
-### Part 8.5: Making the `GradeCalculator` Safe and Easy to Use
-
-**Task:** The recursive function is powerful, but it's a bit clunky for others to use (they need to know to pass the array length as the starting `n`). It's also unsafe—what if the `weights` and `scores` arrays have different lengths? We will create a safe, simple "wrapper" function as the public-facing part of our tool.
-
-**The Problem It Solves:** This makes our `GradeCalculator` tool robust and easy to use. The user of the tool doesn't need to know anything about recursion; they just provide the weights and scores, and the tool handles the rest.
-
-**Reasoning & Engineer Thinking:**
-Good tools hide their internal complexity. A car driver doesn't need to understand the combustion engine; they just need a steering wheel and pedals. Our wrapper function is the "steering wheel" for our recursive "engine." It provides a simple interface and contains all the necessary safety checks.
-
-**Hints:**
-* This new public-facing `weightedGrade` function should first check if the `weights` and `scores` arrays are valid (e.g., not empty and have the same length).
-* If they are valid, it then calls the internal, recursive helper function to do the actual calculation, passing the correct starting values.
-* If they are invalid, it should return an error indicator (like `-1.0`) or print an error message.
-
-**Expected Outcome:**
-
-**Scenario 1: Successful Test Case (from the prompt)**
-```console
-Testing Grade Calculator...
-Weights: {0.4, 0.6}, Scores: {70, 80}
-Final Grade: 76.0
-```
-
-**Scenario 2: Mismatched Array Lengths**
-```console
-Testing Grade Calculator...
-Weights: {0.5, 0.5}, Scores: {100}
-Error: The weights and scores lists must have the same number of items.
-Calculation failed.
-```
-
-**Verification:**
-Test your wrapper with the provided data: `weights = {0.4, 0.6}` and `scores = {70, 80}`. The result must be `76.0`. Then, test the error case by providing arrays of different lengths and confirm that your program displays the friendly error message instead of crashing.
-
----
-
+Manually perform the calculation using the weights you set and the scores you entered. The final grade produced by the program must match your calculation exactly. Try changing the weights in the configuration and recalculating the grade to see the final score change accordingly. This confirms your entire system is working together dynamically.
 ## Step 8 Reflection
 
 **What You Learned:**
